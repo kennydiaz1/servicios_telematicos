@@ -1,8 +1,8 @@
 # Desarrollo Parcial 1
 
 Realizado por: 
-- Kenny Alejandro Diaz Caicedo
-- Andres Felipe Muñoz Silva
+- Kenny Alejandro Diaz Caicedo - 2195114
+- Andres Felipe Muñoz Silva - 2201601
 
 ## Configuración de Servidor DNS Maestro/Esclavo y Autenticación PAM en Apache
 
@@ -15,12 +15,12 @@ En la maquina que escojamos como Maestro iniciamos instalando Bind9 y algunas de
 
 
 Una vez instalados, procedemos a entrar en el directorio
-    /etc/bind
+   ``` /etc/bind ```
 
 En este directorio se hace una copia del archivo db.0 al nombre del DNS de la empresa 
 donde en este caso es *db.diazmunoz2024* 
 
-### Y se cambia lo siguiente:
+### 2. Y se cambia lo siguiente:
 ```
 ;
 ; BIND data file for local loopback interface
@@ -45,7 +45,7 @@ mail    IN      CNAME   ns
 
 Una vez creado y modificado se continua modificando en el mismo directorio el archivo llamado *named.conf.local* 
 
-### Se hace lo siguiente:
+### 3. Se hace lo siguiente:
 ```
 //
 // Do any local configuration here
@@ -66,6 +66,41 @@ type master;
 file "/etc/bind/db.192";
 };
 ```
-Esto es para poder configurar el **_DNS_** Maestro
+Esto es para poder configurar el **_DNS_** Maestro y ya con esto terminado en el maestro 
+se continua en la otra maquina para configurar el Esclavo
+
+## En el esclavo
+
+Una vez estando en el esclavo se prosigue a instalar lo necesario para volverlo esclavo,
+en este caso es necesario instalar **_BIND9_** para configurar correctamente el DNS esclavo.
+
+## 4. Instalar Bind9 en el esclavo
+
+```sudo apt-get install bind9```
 
 
+Una vez se termine de instalar Bind9 y sus dependencias, procedemos a entrar al siguiente directorio:
+```/etc/bind```
+
+En este directorio no dirigimos al archivo llamado *named.conf.local* 
+
+### 5. Se modifica lo siguiente:
+
+```
+//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+
+zone "diazmunoz2024.com" {
+type slave;
+masters {192.168.50.3; };
+file "/var/cache/bind/db.diazmunoz2024.com";
+};
+
+```
+
+De esta forma hacemos que la otra maquina se vuelva esclavo.
