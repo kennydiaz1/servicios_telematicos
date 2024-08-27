@@ -201,5 +201,51 @@ Una vez descargado, procedemos a activar el modulo de PAM:
 ```
 a2enmod authnz_pam
 ```
+Al terminar de activar el modulo PAM continuamos con crear el archivo de la lista de excluidos en la carpeta pam.d
 
+```
+sudo vim /etc/pam.d/usuarios_denegados
+```
+
+Y en ese archvio ponemos los nombres que se quieren excluir 
+
+```
+Kenny
+andres
+daniel
+ ```
+ 
+Despues de la lista creamos un archivo  de configuración pam  llamado "apache" en la misma carpeta pam 
+
+```
+sudo vim /etc/pam.d/apache
+```
+
+Y en el archivo ponemos la siguiente configuracion
+
+```
+(ingresa la lista)
+auth required pam_unix.so
+account required pam_unix.so
+
+```
+Autenticamos el acceso al servicio apache mediante las cuentas de ubuntu
+
+```
+groupadd shadow
+usermod -a -G shadow www-data
+chown root:shadow /etc/shadow
+chmod g+r /etc/shadow'''
+```
+Usamos el super usuario para agregar usuarios con el commando add user 
+
+```sudo -i``` Y luego ```adduser nombre_usuario```
+
+
+reiniciamos el apache para aplicar cambios
+
+
+```
+sudo systemctl restart apache2
+```
 
