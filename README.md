@@ -11,11 +11,15 @@ Realizado por:
 En la maquina que escojamos como Maestro iniciamos instalando Bind9 y algunas dependencias
 
 ### 1. Instalar Bind9
-  ``` sudo apt-get install bind9 bind9utils ```
+  ```
+  sudo apt-get install bind9 bind9utils
+ ```
 
 
 Una vez instalados, procedemos a entrar en el directorio
-   ``` /etc/bind ```
+   ```
+ /etc/bind 
+   ```
 
 En este directorio se hace una copia del archivo db.0 al nombre del DNS de la empresa 
 donde en este caso es *db.diazmunoz2024* 
@@ -76,11 +80,15 @@ en este caso es necesario instalar **_BIND9_** para configurar correctamente el 
 
 ## 4. Instalar Bind9 en el esclavo
 
-```sudo apt-get install bind9```
+```
+sudo apt-get install bind9
+```
 
 
 Una vez se termine de instalar Bind9 y sus dependencias, procedemos a entrar al siguiente directorio:
-```/etc/bind```
+```
+/etc/bind
+```
 
 En este directorio no dirigimos al archivo llamado *named.conf.local* 
 
@@ -104,3 +112,83 @@ file "/var/cache/bind/db.diazmunoz2024.com";
 ```
 
 De esta forma hacemos que la otra maquina se vuelva esclavo.
+
+
+## Configuracion de PAM y Apache
+
+### Segunda Parte: Configuración de Autenticación PAM en Servidor Apache
+
+Una vez terminada la configuracion de los servidores DNS en el maestro y esclavo,
+se continua en la maquina Meaestro para configurar apache y la autenticacion PAM
+
+## En la maquina Maestro
+
+Estando en la maquina maestro procedemos a instalar Apache2
+
+### 1. Instalar apache2
+
+```
+sudo apt-get install apache2
+```
+
+Ya intalado apache2 se nos crea un directorio llamado _apache2_, ubicado en:
+```
+/etc/apache2
+```
+Y se configura el archivo **_apache2.conf_** agregando el Directorio:
+
+```
+<Directory "/var/www/html/archivos_privados">
+    AuthType Basic
+    AuthName "Directorio Protegido"
+    Require valid-user
+</Directory>
+
+```
+
+Ya configurado entramos en el directorio _sites-avaible_ y configuramos el archivo **_000-default.conf_**
+
+```
+sudo vim /etc/apache2/sites-available/000-default.conf
+```
+
+Aquí agregamos la siguiente configuracion:
+
+```
+<VirtualHost *:80>
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/html
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+<Directory "/var/www/html/archivos_privados">
+AuthType Basic
+AuthName "private area"
+AuthBasicProvider PAM
+AuthPAMService apache
+Require valid-user
+</Directory>
+</VirtualHost>
+
+```
+
+Una vez hecha esta configuracion nos dirigimos a la siguiente ruta:
+
+```
+/var/www/html
+```
+En esta ruta creamos el directorio ```/archivos_privados``` el cual sera nuestro directorio con index html protegido,
+el cual fue configurado en el archivo **_000-default.conf_** con el siguiente codigo:
+
+```
+<Directory "/var/www/html/archivos_privados">
+AuthType Basic
+AuthName "private area"
+AuthBasicProvider PAM
+AuthPAMService apache
+Require valid-user
+</Directory>
+</VirtualHost>
+
+```
+
+
