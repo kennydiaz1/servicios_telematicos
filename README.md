@@ -187,8 +187,19 @@ AuthBasicProvider PAM
 AuthPAMService apache
 Require valid-user
 </Directory>
-</VirtualHost>
 
+```
+
+Ya configurado en las paginas se puede proceder a descargar el PAM con la siguiente linea de comando:
+
+```
+apt-get install libapache2-mod-authnz-pam
+```
+
+Una vez descargado, procedemos a activar el modulo de PAM:
+
+```
+a2enmod authnz_pam
 ```
 
 
