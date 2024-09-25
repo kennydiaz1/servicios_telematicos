@@ -1,0 +1,10 @@
+Estos son los puertos configurados abiertos para el funcionamiento.
+
+To                         Action      From
+--                         ------      ----
+21/tcp                     ALLOW       Anywhere                 
+22/tcp                     ALLOW       Anywhere                 
+40000:50000/tcp            ALLOW       Anywhere                 
+21/tcp (v6)                ALLOW       Anywhere (v6)            
+22/tcp (v6)                ALLOW       Anywhere (v6)            
+40000:50000/tcp (v6)       ALLOW       Anywhere (v6)  

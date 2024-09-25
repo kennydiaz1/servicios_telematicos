@@ -1,0 +1,13 @@
+Estos son los puertos configurados en el firewall de la máquina.
+
+
+To                         Action      From
+--                         ------      ----
+53/tcp                     ALLOW       Anywhere
+53/udp                     ALLOW       Anywhere
+22/tcp                     ALLOW       Anywhere
+21/tcp                     ALLOW       Anywhere
+53/tcp (v6)                ALLOW       Anywhere (v6)
+53/udp (v6)                ALLOW       Anywhere (v6)
+22/tcp (v6)                ALLOW       Anywhere (v6)
+21/tcp (v6)                ALLOW       Anywhere (v6)
